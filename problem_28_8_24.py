@@ -43,21 +43,17 @@ The substring starting at 9 is "barthefoo". It is the concatenation of ["bar","t
 The substring starting at 12 is "thefoobar". It is the concatenation of ["the","foo","bar"].
 """
 
-
 #! Solution
 from itertools import permutations
 
 def solution(s: str, words: list[str]) -> list[int]:
     concatenated_strs = ["".join(i) for i in permutations(words)]
     concat_word_len = len(concatenated_strs[0])
-    indices, i = [], 0
-    while i + concat_word_len <= len(s):
+    indices = []
+    for i in range(len(s) - concat_word_len + 1):
         if s[i: i + concat_word_len] in concatenated_strs:
             indices.append(i)
-        i += 1
-    # indices = [i for i in range(len(s)) if i + word_len <= len(s) and s[i: i + word_len] in concatenated_strs]
     return indices
-
 
 
 #? Tests
@@ -90,4 +86,4 @@ if __name__ == "__main__":
         print("Expected output: ", i["expected_output"])
         print("Result: ", "pass" if output == i["expected_output"] else "fail")
         print("=======================\n")
-    # print(f"{[1, 2, 3]}")
+    print(f"{[1, 2, 3]}")
