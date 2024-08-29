@@ -76,14 +76,11 @@ if __name__ == "__main__":
         }
     ]
     
-    for i in tests:
-        output = solution(i["s"], i["words"])
+    for test in tests:
+        output = solution(test["s"], test["words"])
         
-        print(f"s: {i["s"]}, words: {i["words"]}")
-        t = ["".join(i) for i in permutations(i["words"])]
-        # print("Concatenated strings", t if len(t) < 5 else f"{t[:5]}...")
+        print(f"s: {test["s"]}, words: {test["words"]}")
         print("Output: ", output)
-        print("Expected output: ", i["expected_output"])
-        print("Result: ", "pass" if output == i["expected_output"] else "fail")
+        print("Expected output: ", test["expected_output"])
+        print("Result: ", "pass" if output == test["expected_output"] else "fail")
         print("=======================\n")
-    print(f"{[1, 2, 3]}")
