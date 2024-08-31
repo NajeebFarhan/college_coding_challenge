@@ -57,10 +57,11 @@ def permute(words: list[str], l: int, r: int, result: list[str]) -> None:
 
 
 def concatenated_substring_indices(s: str, words: list[str]) -> list[int]:
-    concatenated_strs = [];
-    permute(words, 0, len(words) - 1, concatenated_strs);
-    concat_word_len = len(concatenated_strs[0])
-    indices = []
+    concatenated_strs, indices = [], []
+    concat_word_len = len(words[0]) * len(words)
+    
+    permute(words, 0, len(words) - 1, concatenated_strs)
+    
     for i in range(len(s) - concat_word_len + 1):
         if s[i: i + concat_word_len] in concatenated_strs:
             indices.append(i)

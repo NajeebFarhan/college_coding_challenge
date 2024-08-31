@@ -1,28 +1,14 @@
 //* Solution
-// function permute(words, l, r, result) {
-//   if (l === r) {
-//     result.push(words.join(""));
-//   } else {
-//     for (let i = l; i <= r; i++) {
-//       [words[l], words[i]] = [words[i], words[l]];
-//       permute(words, l + 1, r, result);
-//       [words[l], words[i]] = [words[i], words[l]];
-//     }
-//   }
-// }
-
-// a badly written permute version of my senior, original one was in python
-// writing it intentionally here
-function permute(words, result, com = []) {
-  if (com.length === words.length) {
-    result.push(com.join(""));
-    return;
-  }
-  words.forEach((word) => {
-    if (com.every((x) => x !== word)) {
-      permute(words, result, com.concat([word]));
+function permute(words, l, r, result) {
+  if (l === r) {
+    result.push(words.join(""));
+  } else {
+    for (let i = l; i <= r; i++) {
+      [words[l], words[i]] = [words[i], words[l]];
+      permute(words, l + 1, r, result);
+      [words[l], words[i]] = [words[i], words[l]];
     }
-  });
+  }
 }
 
 function findConcatSubstrings(s, words) {
@@ -30,8 +16,7 @@ function findConcatSubstrings(s, words) {
     indices = [],
     concatStringLength = words[0].length * words.length;
 
-  //permute(words, 0, words.length - 1, concatStrings);
-  permute(words, concatStrings);
+  permute(words, 0, words.length - 1, concatStrings);
 
   for (let i = 0; i < s.length - concatStringLength + 1; i++) {
     if (concatStrings.some((x) => x === s.slice(i, i + concatStringLength))) {
