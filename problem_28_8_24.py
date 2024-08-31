@@ -11,7 +11,7 @@ Return an array of the starting indices of all the concatenated substrings in s.
 More in-depth knowledge
 Example 1:
 
-Input: s = "barfoothefoobarman", words = ["foo","bar"]
+Input: s = "barfoothefoobarman", words = ["foo","bar"] - foobar, barfoo
 
 Output: [0,9]
 
@@ -44,10 +44,23 @@ The substring starting at 12 is "thefoobar". It is the concatenation of ["the","
 """
 
 #! Solution
-from itertools import permutations
+# I decided to implement my own permutation function instead of using the built-in one
+def permute(words: list[str], l: int = 0, r = None) -> None:
+    if r == None:
+        r = len(words)
+    if l == r:
+        print("".join(words))
+    else:
+        for i in range(l, r):
+            words[l], words[i] = words[i], words[l]
+            permute(words, l + 1, r)
+            words[l], words[i] = words[i], words[l]
 
-def solution(s: str, words: list[str]) -> list[int]:
-    concatenated_strs = ["".join(i) for i in permutations(words)]
+
+
+def concatenated_substring_indices(s: str, words: list[str]) -> list[int]:
+    concatenated_strs = [];
+    permute(words, 0, len(words), concatenated_strs);
     concat_word_len = len(concatenated_strs[0])
     indices = []
     for i in range(len(s) - concat_word_len + 1):
@@ -77,7 +90,7 @@ if __name__ == "__main__":
     ]
     
     for test in tests:
-        output = solution(test["s"], test["words"])
+        output = concatenated_substring_indices(test["s"], test["words"])
         
         print(f"s: {test['s']}, words: {test['words']}")
         print("Output: ", output)
