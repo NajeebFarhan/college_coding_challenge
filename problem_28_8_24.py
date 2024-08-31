@@ -79,7 +79,7 @@ if __name__ == "__main__":
     for test in tests:
         output = solution(test["s"], test["words"])
         
-        print(f"s: {test["s"]}, words: {test["words"]}")
+        print(f"s: {test['s']}, words: {test['words']}")
         print("Output: ", output)
         print("Expected output: ", test["expected_output"])
         print("Result: ", "pass" if output == test["expected_output"] else "fail")
