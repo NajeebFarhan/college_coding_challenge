@@ -45,22 +45,20 @@ The substring starting at 12 is "thefoobar". It is the concatenation of ["the","
 
 #! Solution
 # I decided to implement my own permutation function instead of using the built-in one
-def permute(words: list[str], l: int = 0, r = None) -> None:
-    if r == None:
-        r = len(words)
+def permute(words: list[str], l: int, r: int, result: list[str]) -> None:
     if l == r:
-        print("".join(words))
+        result.append("".join(words))
     else:
-        for i in range(l, r):
+        for i in range(l, r + 1):
             words[l], words[i] = words[i], words[l]
-            permute(words, l + 1, r)
+            permute(words, l + 1, r, result)
             words[l], words[i] = words[i], words[l]
 
 
 
 def concatenated_substring_indices(s: str, words: list[str]) -> list[int]:
     concatenated_strs = [];
-    permute(words, 0, len(words), concatenated_strs);
+    permute(words, 0, len(words) - 1, concatenated_strs);
     concat_word_len = len(concatenated_strs[0])
     indices = []
     for i in range(len(s) - concat_word_len + 1):

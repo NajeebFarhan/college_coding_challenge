@@ -1,0 +1,64 @@
+//* Solution
+function permute(words, l, r, result) {
+  if (l === r) {
+    result.push(words.join(""));
+  } else {
+    for (let i = l; i <= r; i++) {
+      [words[l], words[i]] = [words[i], words[l]];
+      permute(words, l + 1, r, result);
+      [words[l], words[i]] = [words[i], words[l]];
+    }
+  }
+}
+
+function findConcatSubstrings(s, words) {
+  let concatStrings = [],
+    indices = [];
+
+  permute(words, 0, words.length - 1, concatStrings);
+
+  let concatStringLength = concatStrings[0].length;
+
+  for (let i = 0; i < s.length - concatStringLength + 1; i++) {
+    if (concatStrings.some((x) => x === s.slice(i, i + concatStringLength))) {
+      indices.push(i);
+    }
+  }
+
+  return indices;
+}
+
+//? Tests
+const tests = [
+  {
+    s: "barfoothefoobarman",
+    words: ["foo", "bar"],
+    expected_output: [0, 9],
+  },
+  {
+    s: "wordgoodgoodgoodbestword",
+    words: ["word", "good", "best", "word"],
+    expected_output: [],
+  },
+  {
+    s: "barfoofoobarthefoobarman",
+    words: ["bar", "foo", "the"],
+    expected_output: [6, 9, 12],
+  },
+];
+
+tests.forEach((test) => {
+  let output = findConcatSubstrings(test.s, test.words);
+
+  console.log(`s: ${test.s}, words: ${test.words}`);
+  console.log(`Output: ${output}`);
+  console.log(`Expected output: ${test.expected_output}`);
+  console.log(
+    `Result: ${
+      output.every((value, index) => value === test.expected_output[index])
+        ? "pass"
+        : "fail"
+    }`
+  );
+  console.log("========================\n");
+});
