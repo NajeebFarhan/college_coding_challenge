@@ -1,6 +1,50 @@
+/*
+?You are given a string s and an array of strings words. All the strings of words are of the same length.
+
+!A concatenated string is a string that exactly contains all the strings of any permutation of words concatenated.
+
+?For example, if words = ["ab","cd","ef"], then "abcdef", "abefcd", "cdabef", "cdefab", "efabcd", and "efcdab" are all concatenated strings. "acdbef" is not a concatenated string because it is not the concatenation of any permutation of words.
+Return an array of the starting indices of all the concatenated substrings in s. You can return the answer in any order.
+*/
+
+/*
+More in-depth knowledge
+Example 1:
+
+Input: s = "barfoothefoobarman", words = ["foo","bar"]
+
+Output: [0,9]
+
+Explanation:
+
+The substring starting at 0 is "barfoo". It is the concatenation of ["bar","foo"] which is a permutation of words.
+The substring starting at 9 is "foobar". It is the concatenation of ["foo","bar"] which is a permutation of words.
+
+Example 2:
+
+Input: s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
+
+Output: []
+
+Explanation:
+
+There is no concatenated substring.
+
+Example 3:
+
+Input: s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+
+Output: [6,9,12]
+
+Explanation:
+
+The substring starting at 6 is "foobarthe". It is the concatenation of ["foo","bar","the"].
+The substring starting at 9 is "barthefoo". It is the concatenation of ["bar","the","foo"].
+The substring starting at 12 is "thefoobar". It is the concatenation of ["the","foo","bar"].
+*/
+
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 #define MAX 1000
 #define MAX_STRING_LENGTH 100
@@ -11,35 +55,41 @@ typedef struct
     int tail;
 } Stack;
 
+typedef struct
+{
+    int data[MAX];
+    int length;
+} Array;
+
 void createStack(Stack *s);
+void createArray(Array *a);
 void pushStack(Stack *s, char *word);
 void permute(char **s, int l, int r, Stack *stack);
 int inStack(Stack stack, char *s);
-int *concatentatedSubstringIndices(char *s, char **words, int string_size, int array_size);
+Array concatentatedSubstringIndices(char *s, char **words, int string_size, int array_size);
 
 int main()
 {
     // Example input
     int n = 2;
     char *words[] = {"foo", "bar"};
+    // foobar, barfoo
     char s[] = "barfoothefoobarman";
-    int *result = concatentatedSubstringIndices(s, words, strlen(s), n);
+    Array result = concatentatedSubstringIndices(s, words, strlen(s), n);
 
-    int i = 0;
-    while (1)
+    for (int i = 0; i < result.length; i++)
     {
-        if (result[i] == -1)
-            break;
-        printf("%d ", result[i]);
-        i++;
+        printf("%d ", result.data[i]);
     }
+    printf("\n");
 }
 
-int *concatentatedSubstringIndices(char *s, char **words, int string_size, int array_size)
+Array concatentatedSubstringIndices(char *s, char **words, int string_size, int array_size)
 {
     Stack concat_strings;
     createStack(&concat_strings);
-    int *indices = (int *)malloc(string_size * sizeof(int));
+    Array indices;
+    createArray(&indices);
 
     permute(words, 0, array_size - 1, &concat_strings);
     int concat_str_len = strlen(concat_strings.data[0]);
@@ -54,23 +104,21 @@ int *concatentatedSubstringIndices(char *s, char **words, int string_size, int a
         }
         if (inStack(concat_strings, temp))
         {
-            indices[indices_len++] = i;
+            indices.data[indices.length++] = i;
         }
     }
 
-    indices[indices_len] = -1;
-    // Result
-    // for (int i = 0; i < indices_len; i++)
-    // {
-    //     printf("%d ", indices[i]);
-    // }
-    // printf("\n");
     return indices;
 }
 
 void createStack(Stack *s)
 {
     s->tail = -1;
+}
+
+void createArray(Array *a)
+{
+    a->length = 0;
 }
 
 void pushStack(Stack *s, char *word)
