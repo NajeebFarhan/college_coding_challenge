@@ -1,16 +1,8 @@
 #include <iostream>
 #include <string>
-
-#define MAX 1000
+#include <vector>
 
 using namespace std;
-
-template <class T>
-struct Arr
-{
-    T data[MAX];
-    int length;
-};
 
 void swap(string *a, string *b)
 {
@@ -18,68 +10,117 @@ void swap(string *a, string *b)
     *a = *b;
     *b = temp;
 }
-void permute(Arr<string> *words, int l, int r, Arr<string> *result)
+void permute(vector<string> *words, int l, int r, vector<string> *result)
 {
     if (l == r)
     {
         string buffer = "";
-        for (int i = 0; i <= r; i++)
-            buffer.append(words->data[i]);
-        result->data[result->length++] = buffer;
+        for (string word : *words)
+            buffer.append(word);
+        result->push_back(buffer);
     }
     else
     {
         for (int i = l; i <= r; i++)
         {
-            swap(&words->data[l], &words->data[i]);
+            swap(words->at(l), words->at(i));
             permute(words, l + 1, r, result);
-            swap(&words->data[l], &words->data[i]);
+            swap(words->at(l), words->at(i));
         }
     }
 }
 
-bool inArray(Arr<string> arr, string str)
+bool inArray(vector<string> elements, string str)
 {
-    for (int i = 0; i < arr.length; i++)
+    for (string element : elements)
     {
-        if (!arr.data[i].compare(str))
+        if (!element.compare(str))
             return true;
     }
     return false;
 }
 
-Arr<int> findConcatSubstring(string s, Arr<string> words)
+vector<int> findConcatSubstring(string s, vector<string> words)
 {
-    Arr<int> indices;
-    indices.length = 0;
+    vector<int> indices;
 
-    Arr<string> concatStrings;
-    concatStrings.length = 0;
-    int concatStringsLen = words.data[0].length() * words.length;
+    vector<string> concatStrings;
+    int concatStringsLen = words.at(0).length() * words.size();
 
-    permute(&words, 0, words.length - 1, &concatStrings);
+    permute(&words, 0, words.size() - 1, &concatStrings);
 
     for (int i = 0; i <= s.length() - concatStringsLen; i++)
     {
         if (inArray(concatStrings, s.substr(i, concatStringsLen)))
         {
-            indices.data[indices.length++] = i;
+            indices.push_back(i);
         }
     }
     return indices;
 }
 
+//? Tests
+struct Test
+{
+    string s;
+    vector<string> words;
+    vector<int> expected_output;
+};
+
+bool isEqual(vector<int> a, vector<int> b)
+{
+    if (a.size() != b.size())
+        return false;
+
+    for (int i = 0; i < a.size(); i++)
+    {
+        if (a.at(i) != b.at(i))
+            return false;
+    }
+
+    return true;
+}
+
 int main()
 {
-    Arr<string> words = {"foo", "bar"};
-    words.length = 2;
-    string s = "barfoothefoobarman";
-    Arr result = findConcatSubstring(s, words);
+    Test tests[] = {
+        {"barfoothefoobarman",
+         {"foo", "bar"},
+         {0, 9}},
+        {"wordgoodgoodgoodbestword",
+         {"word", "good", "best", "word"},
+         {}},
+        {"barfoofoobarthefoobarman",
+         {"bar", "foo", "the"},
+         {6, 9, 12}}};
 
-    cout << "[ ";
-    for (int i = 0; i < result.length; i++)
+    for (Test test : tests)
     {
-        cout << result.data[i] << " ";
+        vector<int> output = findConcatSubstring(test.s, test.words);
+
+        cout << "s: " << test.s << ", words: [ ";
+        for (string word : test.words)
+        {
+            cout << word << " ";
+        }
+        cout << "]\n";
+
+        cout << "Output: [ ";
+        for (int o : output)
+        {
+            cout << o << " ";
+        }
+        cout << "]\n";
+
+        cout << "Expected output: [ ";
+        for (int ex : test.expected_output)
+        {
+            cout << ex << " ";
+        }
+        cout << "]\n";
+
+        cout << "Result: " << (isEqual(output, test.expected_output) ? "pass" : "fail") << "\n";
+
+        cout << "====================================\n\n";
     }
-    cout << "]\n";
 }
