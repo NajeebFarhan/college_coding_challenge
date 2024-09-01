@@ -10,7 +10,6 @@ import (
 func permute(words []string, l int, r int, result *[]string) {
 	if l == r {
 		*result = append(*result, strings.Join(words, ""))
-		// fmt.Println(strings.Join(words, ""))
 	} else {
 		for i := l; i <= r; i++ {
 			words[l], words[i] = words[i], words[l]
