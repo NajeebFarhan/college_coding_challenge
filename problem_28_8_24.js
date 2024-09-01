@@ -54,6 +54,7 @@ tests.forEach((test) => {
   console.log(`Expected output: ${test.expected_output}`);
   console.log(
     `Result: ${
+      output.length === test.expected_output.length &&
       output.every((value, index) => value === test.expected_output[index])
         ? "pass"
         : "fail"
