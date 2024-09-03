@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -30,11 +31,11 @@ void permute(vector<string> *words, int l, int r, vector<string> *result)
     }
 }
 
-bool inArray(vector<string> elements, string str)
+bool inArray(vector<string> arr, string str)
 {
-    for (string element : elements)
+    for (int i = 0; i < arr.size(); i++)
     {
-        if (!element.compare(str))
+        if (!arr.at(i).compare(str))
             return true;
     }
     return false;
@@ -81,6 +82,23 @@ bool isEqual(vector<int> a, vector<int> b)
     return true;
 }
 
+template <typename T>
+string stringifyArr(vector<T> arr)
+{
+    string buffer = "[";
+    for (int i = 0; i < arr.size(); i++)
+    {
+        stringstream ss;
+        ss << arr[i];
+        buffer += ss.str();
+        if (i != arr.size() - 1)
+            buffer += ", ";
+    }
+    buffer += "]";
+
+    return buffer;
+}
+
 int main()
 {
     Test tests[] = {
@@ -98,29 +116,16 @@ int main()
     {
         vector<int> output = findConcatSubstring(test.s, test.words);
 
-        cout << "s: " << test.s << ", words: [ ";
-        for (string word : test.words)
-        {
-            cout << word << " ";
-        }
-        cout << "]\n";
+        cout << "s: " << test.s << ", words: " << stringifyArr<string>(test.words) << "\n";
 
-        cout << "Output: [ ";
-        for (int o : output)
-        {
-            cout << o << " ";
-        }
-        cout << "]\n";
+        cout << "Output: " << stringifyArr<int>(output) << "\n";
 
-        cout << "Expected output: [ ";
-        for (int ex : test.expected_output)
-        {
-            cout << ex << " ";
-        }
-        cout << "]\n";
+        cout << "Expected output: " << stringifyArr<int>(test.expected_output) << "\n";
 
         cout << "Result: " << (isEqual(output, test.expected_output) ? "pass" : "fail") << "\n";
 
         cout << "====================================\n\n";
     }
+
+    return 0;
 }
